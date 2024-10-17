@@ -84,7 +84,7 @@ public class TaskletExecutionServiceTest extends JetTestSupport {
 
     @Before
     public void before() {
-        executor = Executors.newCachedThreadPool();
+        executor = Executors.newVirtualThreadPerTaskExecutor();
         NodeEngine neMock = mock(NodeEngine.class);
 
         HazelcastInstance hzMock = mock(HazelcastInstance.class);

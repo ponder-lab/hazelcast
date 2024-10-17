@@ -34,7 +34,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
 import static com.hazelcast.test.Accessors.getNodeEngineImpl;
-import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 @RunWith(HazelcastSerialClassRunner.class)
@@ -51,7 +51,7 @@ public class IteratorWithCursorManagerTest extends HazelcastTestSupport {
 
     @Test
     public void testIteration() throws InterruptedException {
-        ExecutorService executor = newFixedThreadPool(THREAD_COUNT);
+        ExecutorService executor = newVirtualThreadPerTaskExecutor();
 
         CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
         for (int i = 0; i < THREAD_COUNT; i++) {

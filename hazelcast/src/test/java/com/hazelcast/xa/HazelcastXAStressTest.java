@@ -57,8 +57,8 @@ public class HazelcastXAStressTest extends HazelcastTestSupport {
     public void testCommitConcurrently() {
         int count = 10000;
         String name = randomString();
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
-        ExecutorService executorServiceForCommit = Executors.newFixedThreadPool(5);
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+        ExecutorService executorServiceForCommit = Executors.newVirtualThreadPerTaskExecutor();
         HazelcastXAResource xaResource = instance.getXAResource();
         for (int i = 0; i < count; i++) {
             XATransactionRunnable runnable = new XATransactionRunnable(xaResource, name, executorServiceForCommit, i);

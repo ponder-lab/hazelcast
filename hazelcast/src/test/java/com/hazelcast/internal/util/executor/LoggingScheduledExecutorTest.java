@@ -212,7 +212,7 @@ public class LoggingScheduledExecutorTest extends HazelcastTestSupport {
 
         @Override
         public Thread newThread(@Nonnull Runnable r) {
-            return new Thread(r);
+            return Thread.ofVirtual().unstarted(r);
         }
     }
 

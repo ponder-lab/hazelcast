@@ -592,7 +592,7 @@ public class JobTest extends SimpleTestInClusterSupport {
 
     private void stressTest_parallelNamedJobSubmission(HazelcastInstance instance) throws Exception {
         final int nThreads = 5;
-        ExecutorService executor = Executors.newFixedThreadPool(nThreads);
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
         String randomPrefix = randomName();
         try {
             for (int round = 0; round < 10; round++) {

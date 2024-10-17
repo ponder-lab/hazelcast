@@ -98,7 +98,7 @@ public class IOBalancerMemoryLeakTest extends HazelcastTestSupport {
 
         Thread[] threads = new Thread[threadCount];
         for (int i = 0; i < threadCount; i++) {
-            threads[i] = new Thread(runnable);
+            threads[i] = Thread.ofVirtual().unstarted(runnable);
             threads[i].start();
         }
 

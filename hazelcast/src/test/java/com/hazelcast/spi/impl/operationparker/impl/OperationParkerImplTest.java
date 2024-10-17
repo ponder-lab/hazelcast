@@ -49,7 +49,7 @@ public class OperationParkerImplTest extends HazelcastTestSupport {
         CountDownLatch latch = new CountDownLatch(nThreads);
 
         for (int i = 0; i < nThreads; i++) {
-            new Thread(new LockWaitAndUnlockTask(hz, keyCount, latch)).start();
+            Thread.ofVirtual().start(new LockWaitAndUnlockTask(hz, keyCount, latch));
         }
 
         while (latch.getCount() > 0) {

@@ -158,7 +158,7 @@ public class OperationCallIdTest {
         volatile int activationCount;
 
         void run() {
-            final Thread reader = new Thread(() -> {
+            final Thread reader = Thread.ofVirtual().unstarted(() -> {
                 try {
                     long previousCallId = 0;
                     while (!Thread.interrupted()) {
@@ -182,7 +182,7 @@ public class OperationCallIdTest {
             final Thread[] writers = new Thread[writerCount];
             for (int i = 0; i < writers.length; i++) {
                 final int initialCallId = i + 1;
-                writers[i] = new Thread(() -> {
+                writers[i] = Thread.ofVirtual().unstarted(() -> {
                     long nextCallId = initialCallId;
                     while (!Thread.interrupted()) {
                         try {

@@ -114,7 +114,7 @@ public class AsyncTransformUsingServiceP_IntegrationTest extends SimpleTestInClu
         journaledMap.putAll(IntStream.range(0, NUM_ITEMS).boxed().collect(toMap(i -> i, i -> i)));
         sinkList = instance().getList(randomMapName("sinkList"));
         jobConfig = new JobConfig().setProcessingGuarantee(EXACTLY_ONCE).setSnapshotIntervalMillis(0);
-        serviceFactory = sharedService(pctx -> Executors.newFixedThreadPool(8), ExecutorService::shutdown);
+        serviceFactory = sharedService(pctx -> Executors.newVirtualThreadPerTaskExecutor(), ExecutorService::shutdown);
     }
 
     @Test

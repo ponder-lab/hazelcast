@@ -147,7 +147,7 @@ public class ClusterShutdownTest extends HazelcastTestSupport {
                 instance.getCluster().shutdown();
             };
 
-            new Thread(shutdownRunnable).start();
+            Thread.ofVirtual().start(shutdownRunnable);
         }
 
         latch.countDown();

@@ -83,7 +83,7 @@ public final class JobSubmissionSlownessRegressionTest extends JetTestSupport {
     public void regressionTestForPR1488() {
         logger.info(String.format("Starting test with %d threads", THREADS_COUNT));
 
-        ExecutorService executorService = Executors.newFixedThreadPool(THREADS_COUNT);
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
         double measurementARateSum = 0;
         double measurementBRateSum = 0;

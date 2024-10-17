@@ -181,7 +181,7 @@ public class JobUploadClientSuccessTest extends JetTestSupport {
     public void test_stress_jarUpload_whenResourceUploadIsEnabled() {
         createCluster();
 
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
         // Shared client for ExecutorService threads
         HazelcastInstance client = createHazelcastClient();

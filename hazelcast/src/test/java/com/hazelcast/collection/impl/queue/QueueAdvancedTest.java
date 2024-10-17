@@ -214,7 +214,7 @@ public class QueueAdvancedTest extends HazelcastTestSupport {
 
         assertOpenEventually(offerLatch);
 
-        ExecutorService es = Executors.newFixedThreadPool(50);
+        ExecutorService es = Executors.newVirtualThreadPerTaskExecutor();
         CountDownLatch latch = new CountDownLatch(200);
         for (int i = 0; i < 100; i++) {
             es.execute(() -> {
@@ -264,7 +264,7 @@ public class QueueAdvancedTest extends HazelcastTestSupport {
         }).start();
         assertOpenEventually(offerLatch);
 
-        ExecutorService es = Executors.newFixedThreadPool(50);
+        ExecutorService es = Executors.newVirtualThreadPerTaskExecutor();
         CountDownLatch latch = new CountDownLatch(200);
         Thread.sleep(3000);
         for (int i = 0; i < 100; i++) {
@@ -329,7 +329,7 @@ public class QueueAdvancedTest extends HazelcastTestSupport {
         }).start();
         assertOpenEventually(pollLatch);
 
-        ExecutorService es = Executors.newFixedThreadPool(50);
+        ExecutorService es = Executors.newVirtualThreadPerTaskExecutor();
         CountDownLatch latch = new CountDownLatch(200);
         for (int i = 0; i < 100; i++) {
             es.execute(() -> {

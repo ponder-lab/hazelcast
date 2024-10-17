@@ -168,7 +168,7 @@ public class MapNearCacheStaleReadTest extends HazelcastTestSupport {
 
     private void runTestInternal() {
         // start 1 putter thread (put0)
-        Thread threadPut = new Thread(new PutRunnable(), "put0");
+        Thread threadPut = Thread.ofVirtual().unstarted(new PutRunnable(), "put0");
         threadPut.start();
 
         // wait for putter thread to start before starting getter threads
@@ -177,7 +177,7 @@ public class MapNearCacheStaleReadTest extends HazelcastTestSupport {
         // start numGetters getter threads (get0-numGetters)
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < NUM_GETTERS; i++) {
-            Thread thread = new Thread(new GetRunnable(), "get" + i);
+            Thread thread = Thread.ofVirtual().unstarted(new GetRunnable(), "get" + i);
             threads.add(thread);
         }
         for (Thread thread : threads) {

@@ -235,7 +235,7 @@ public class TopicTest extends HazelcastTestSupport {
         final CountDownLatch messageLatch = new CountDownLatch(nodeCount * nodeCount * count);
         final CountDownLatch publishLatch = new CountDownLatch(nodeCount * count);
 
-        ExecutorService ex = Executors.newFixedThreadPool(nodeCount);
+        ExecutorService ex = Executors.newVirtualThreadPerTaskExecutor();
         for (int i = 0; i < nodeCount; i++) {
             final int finalI = i;
             ex.execute(() -> {
@@ -498,7 +498,7 @@ public class TopicTest extends HazelcastTestSupport {
         String randomTopicName = randomString();
 
         HazelcastInstance instance = createHazelcastInstance();
-        ExecutorService ex = Executors.newFixedThreadPool(10);
+        ExecutorService ex = Executors.newVirtualThreadPerTaskExecutor();
 
         final ITopic<String> topic = instance.getTopic(randomTopicName);
         final CountDownLatch latch = new CountDownLatch(count);
@@ -634,7 +634,7 @@ public class TopicTest extends HazelcastTestSupport {
         final CountDownLatch messageLatch = new CountDownLatch(nodeCount * nodeCount * count);
         final CountDownLatch publishLatch = new CountDownLatch(nodeCount * count);
 
-        ExecutorService ex = Executors.newFixedThreadPool(nodeCount);
+        ExecutorService ex = Executors.newVirtualThreadPerTaskExecutor();
         for (int i = 0; i < nodeCount; i++) {
             final int finalI = i;
             ex.execute(() -> {

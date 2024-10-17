@@ -102,11 +102,11 @@ public abstract class PartitionCorrectnessTestSupport extends HazelcastTestSuppo
 
             final CountDownLatch latch = new CountDownLatch(count);
             for (int i = 0; i < count; i++) {
-                new Thread(() -> {
+                Thread.ofVirtual().start(() -> {
                     HazelcastInstance instance = factory.newHazelcastInstance(config);
                     syncInstances.add(instance);
                     latch.countDown();
-                }).start();
+                });
             }
             assertTrue(latch.await(2, TimeUnit.MINUTES));
             return instances;
@@ -119,10 +119,10 @@ public abstract class PartitionCorrectnessTestSupport extends HazelcastTestSuppo
         } else {
             final CountDownLatch latch = new CountDownLatch(addresses.size());
             for (final Address address : addresses) {
-                new Thread(() -> {
+                Thread.ofVirtual().start(() -> {
                     factory.newHazelcastInstance(address, config);
                     latch.countDown();
-                }).start();
+                });
             }
             assertTrue(latch.await(2, TimeUnit.MINUTES));
         }
@@ -148,7 +148,7 @@ public abstract class PartitionCorrectnessTestSupport extends HazelcastTestSuppo
                 final HazelcastInstance hz = instances.get(i);
                 addresses.add(getNode(hz).getThisAddress());
 
-                new Thread(() -> {
+                Thread.ofVirtual().start(() -> {
                     try {
                         TestUtil.terminateInstance(hz);
                     } catch (Throwable e) {
@@ -156,7 +156,7 @@ public abstract class PartitionCorrectnessTestSupport extends HazelcastTestSuppo
                     } finally {
                         latch.countDown();
                     }
-                }).start();
+                });
             }
             assertTrue(latch.await(2, TimeUnit.MINUTES));
             if (error[0] != null) {

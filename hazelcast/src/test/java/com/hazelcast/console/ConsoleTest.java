@@ -99,7 +99,7 @@ public class ConsoleTest {
             pipeOut = new PipedOutputStream(pipeIn);
             System.setIn(pipeIn);
             ConsoleApp consoleApp = ConsoleApp.create();
-            ExecutorService tp = Executors.newFixedThreadPool(1);
+            ExecutorService tp = Executors.newVirtualThreadPerTaskExecutor();
             try {
                 tp.execute(() -> {
                     try {

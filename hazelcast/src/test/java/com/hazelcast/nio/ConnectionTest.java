@@ -79,7 +79,7 @@ public class ConnectionTest extends HazelcastTestSupport {
         final AtomicInteger cc = new AtomicInteger();
 
         final Set<Socket> sockets = Collections.newSetFromMap(new ConcurrentHashMap<>());
-        final Thread st = new Thread("server-socket") {
+        final Thread st = Thread.ofVirtual().unstarted("server-socket") {
             public void run() {
                 while (!isInterrupted()) {
                     try {
@@ -95,7 +95,7 @@ public class ConnectionTest extends HazelcastTestSupport {
         final AtomicBoolean flag = new AtomicBoolean(false);
         for (int i = 0; i < count; i++) {
             final Socket clientSocket = new Socket();
-            Thread t = new Thread("client-socket-" + i) {
+            Thread t = Thread.ofVirtual().unstarted("client-socket-" + i) {
                 public void run() {
                     try {
                         if (cc.incrementAndGet() > count / 5 && Math.random() > .87f && flag.compareAndSet(false, true)) {
@@ -143,7 +143,7 @@ public class ConnectionTest extends HazelcastTestSupport {
 
         for (int i = 0; i < count; i++) {
             final Socket clientSocket = new Socket();
-            Thread t = new Thread("client-socket-" + i) {
+            Thread t = Thread.ofVirtual().unstarted("client-socket-" + i) {
                 public void run() {
                     try {
                         if (cc.incrementAndGet() > count / 5 && Math.random() > .87f && flag.compareAndSet(false, true)) {
@@ -203,13 +203,13 @@ public class ConnectionTest extends HazelcastTestSupport {
         final CountDownLatch ll = new CountDownLatch(1);
         final AtomicInteger cc = new AtomicInteger();
 
-        new Thread(() -> {
+        Thread.ofVirtual().start(() -> {
             try {
                 ll.await(1, TimeUnit.MINUTES);
                 hz.getLifecycleService().terminate();
             } catch (InterruptedException ignored) {
             }
-        }).start();
+        });
 
         final Collection<Socket> sockets = Collections.newSetFromMap(new ConcurrentHashMap<>());
         final AtomicInteger k0 = new AtomicInteger();
@@ -239,8 +239,7 @@ public class ConnectionTest extends HazelcastTestSupport {
                     latch.countDown();
                 }
             };
-            Thread t = new Thread(task, "socket-thread-" + i);
-            t.setDaemon(true);
+            Thread t = Thread.ofVirtual().unstarted(task, "socket-thread-" + i);
             t.start();
         }
 

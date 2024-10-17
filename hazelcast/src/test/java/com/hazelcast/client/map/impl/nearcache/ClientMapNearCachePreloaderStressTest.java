@@ -37,7 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.hazelcast.internal.nearcache.impl.NearCacheTestUtils.getBaseConfig;
-import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 import static junit.framework.TestCase.assertNull;
 
 @RunWith(HazelcastParallelClassRunner.class)
@@ -63,7 +63,7 @@ public class ClientMapNearCachePreloaderStressTest extends HazelcastTestSupport 
 
         int createPutGetThreadCount = 2;
         int destroyThreadCount = 2;
-        ExecutorService pool = newFixedThreadPool(createPutGetThreadCount + destroyThreadCount);
+        ExecutorService pool = newVirtualThreadPerTaskExecutor();
 
         final AtomicBoolean isRunning = new AtomicBoolean(true);
         final AtomicReference<Exception> exception = new AtomicReference<>();
