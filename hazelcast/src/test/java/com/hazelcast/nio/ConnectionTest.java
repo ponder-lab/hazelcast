@@ -79,52 +79,47 @@ public class ConnectionTest extends HazelcastTestSupport {
         final AtomicInteger cc = new AtomicInteger();
 
         final Set<Socket> sockets = Collections.newSetFromMap(new ConcurrentHashMap<>());
-        final Thread st = Thread.ofVirtual().unstarted("server-socket") {
-            public void run() {
-                while (!isInterrupted()) {
-                    try {
-                        Socket socket = serverSocket.accept();
-                        sockets.add(socket);
-                    } catch (IOException ignored) {
-                    }
+        final Thread st = Thread.ofVirtual().name("server-socket").unstarted(() -> {
+            while (!isInterrupted()) {
+                try {
+                    Socket socket = serverSocket.accept();
+                    sockets.add(socket);
+                } catch (IOException ignored) {
                 }
             }
-        };
+        });
         st.start();
 
         final AtomicBoolean flag = new AtomicBoolean(false);
         for (int i = 0; i < count; i++) {
             final Socket clientSocket = new Socket();
-            Thread t = Thread.ofVirtual().unstarted("client-socket-" + i) {
-                public void run() {
-                    try {
-                        if (cc.incrementAndGet() > count / 5 && Math.random() > .87f && flag.compareAndSet(false, true)) {
-                            st.interrupt();
-                            serverSocket.close();
-                            try {
-                                st.join();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            Iterator<Socket> iter = sockets.iterator();
-                            while (iter.hasNext()) {
-                                Socket socket = iter.next();
-                                socket.shutdownOutput();
-                                socket.close();
-                                iter.remove();
-                            }
-                        } else {
-                            clientSocket.connect(new InetSocketAddress(13131));
-                            connected.incrementAndGet();
-                            clientSocket.getInputStream().read();
+            Thread t = Thread.ofVirtual().name("client-socket-" + i).unstarted(() -> {
+                try {
+                    if (cc.incrementAndGet() > count / 5 && Math.random() > .87f && flag.compareAndSet(false, true)) {
+                        st.interrupt();
+                        serverSocket.close();
+                        try {
+                            st.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException ignored) {
-                    } finally {
-                        latch.countDown();
+                        Iterator<Socket> iter = sockets.iterator();
+                        while (iter.hasNext()) {
+                            Socket socket = iter.next();
+                            socket.shutdownOutput();
+                            socket.close();
+                            iter.remove();
+                        }
+                    } else {
+                        clientSocket.connect(new InetSocketAddress(13131));
+                        connected.incrementAndGet();
+                        clientSocket.getInputStream().read();
                     }
+                } catch (IOException ignored) {
+                } finally {
+                    latch.countDown();
                 }
-            };
-            t.setDaemon(true);
+            });
             t.start();
         }
 
@@ -143,25 +138,22 @@ public class ConnectionTest extends HazelcastTestSupport {
 
         for (int i = 0; i < count; i++) {
             final Socket clientSocket = new Socket();
-            Thread t = Thread.ofVirtual().unstarted("client-socket-" + i) {
-                public void run() {
-                    try {
-                        if (cc.incrementAndGet() > count / 5 && Math.random() > .87f && flag.compareAndSet(false, true)) {
-                            serverSocket.close();
-                        } else {
-                            clientSocket.setSoTimeout(1000 * 5);
-                            clientSocket.connect(new InetSocketAddress(13131));
-                            connected.incrementAndGet();
-                            InputStream in = clientSocket.getInputStream();
-                            in.read();
-                        }
-                    } catch (IOException ignored) {
-                    } finally {
-                        latch.countDown();
+            Thread t = Thread.ofVirtual().name("client-socket-" + i).unstarted(() -> {
+                try {
+                    if (cc.incrementAndGet() > count / 5 && Math.random() > .87f && flag.compareAndSet(false, true)) {
+                        serverSocket.close();
+                    } else {
+                        clientSocket.setSoTimeout(1000 * 5);
+                        clientSocket.connect(new InetSocketAddress(13131));
+                        connected.incrementAndGet();
+                        InputStream in = clientSocket.getInputStream();
+                        in.read();
                     }
+                } catch (IOException ignored) {
+                } finally {
+                    latch.countDown();
                 }
-            };
-            t.setDaemon(true);
+            });
             t.start();
         }
 
@@ -239,7 +231,7 @@ public class ConnectionTest extends HazelcastTestSupport {
                     latch.countDown();
                 }
             };
-            Thread t = Thread.ofVirtual().unstarted(task, "socket-thread-" + i);
+            Thread t = Thread.ofVirtual().name("socket-thread-" + i).unstarted(task);
             t.start();
         }
 

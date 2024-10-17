@@ -71,7 +71,7 @@ public class SecondsBasedEntryTaskSchedulerStressTest {
 
         for (int i = 0; i < NUMBER_OF_THREADS; i++) {
             final Thread thread = Thread.ofVirtual().unstarted(() -> {
-            	random = new Random();
+                Random random = new Random();
                 for (int j = 0; j < NUMBER_OF_EVENTS_PER_THREAD; j++) {
                     scheduler.schedule(random.nextInt(5000) + 1, j, null);
                 }
@@ -105,7 +105,7 @@ public class SecondsBasedEntryTaskSchedulerStressTest {
                     int key = random.nextInt(numberOfKeys);
 
                     synchronized (locks[key]) {
-                        if (scheduler.schedule(random.nextInt(5000) + 1;, key, j)) {
+                        if (scheduler.schedule(random.nextInt(5000) + 1, key, j)) {
                             latestValues.put(key, j);
                         }
                     }

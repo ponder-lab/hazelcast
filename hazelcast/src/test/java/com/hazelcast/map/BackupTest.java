@@ -218,7 +218,7 @@ public class BackupTest extends HazelcastTestSupport {
         for (int i = 0; i < nodeCount; i++) {
             final int index = i;
             Thread.ofVirtual().start(() -> {
-            	try {
+                try {
                     sleepMillis(index * ThreadLocalRandom.current().nextInt(1_000));
                     HazelcastInstance instance = nodeFactory.newHazelcastInstance(config);
                     if (!Accessors.getNode(instance).isMaster()) {
