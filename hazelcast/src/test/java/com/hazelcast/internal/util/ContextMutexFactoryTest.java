@@ -56,7 +56,7 @@ public class ContextMutexFactoryTest {
         final CyclicBarrier cyc = new CyclicBarrier(concurrency + 1);
 
         for (int i = 0; i < concurrency; i++) {
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 await(cyc);
 
                 for (String key : keys) {
@@ -73,7 +73,7 @@ public class ContextMutexFactoryTest {
                 }
 
                 await(cyc);
-            }).start();
+            });
         }
         // start threads, wait for them to finish
         await(cyc);

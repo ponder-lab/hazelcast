@@ -39,7 +39,7 @@ import java.util.concurrent.TimeoutException;
 final class DnsEndpointResolver
         extends HazelcastKubernetesDiscoveryStrategy.EndpointResolver {
     // executor service for dns lookup calls
-    private static final ExecutorService DNS_LOOKUP_SERVICE = Executors.newCachedThreadPool();
+    private static final ExecutorService DNS_LOOKUP_SERVICE = Executors.newVirtualThreadPerTaskExecutor();
 
     private final String serviceDns;
     private final int port;

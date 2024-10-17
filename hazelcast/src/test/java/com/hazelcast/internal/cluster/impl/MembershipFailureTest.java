@@ -871,10 +871,10 @@ public class MembershipFailureTest extends HazelcastTestSupport {
     private void startInstancesConcurrently(int count) {
         final CountDownLatch latch = new CountDownLatch(count);
         for (int i = 0; i < count; i++) {
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 newHazelcastInstance();
                 latch.countDown();
-            }).start();
+            });
         }
         assertOpenEventually(latch);
     }
@@ -888,10 +888,10 @@ public class MembershipFailureTest extends HazelcastTestSupport {
 
         final CountDownLatch latch = new CountDownLatch(count);
         for (final HazelcastInstance hz : instances) {
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 terminateInstance(hz);
                 latch.countDown();
-            }).start();
+            });
         }
         assertOpenEventually(latch);
     }

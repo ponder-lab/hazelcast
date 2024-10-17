@@ -85,7 +85,7 @@ public class QueryCacheMemoryLeakTest extends HazelcastTestSupport {
         final AtomicBoolean stop = new AtomicBoolean(false);
         ArrayList<Thread> threads = new ArrayList<>();
         for (int i = 0; i < STRESS_TEST_THREAD_COUNT; i++) {
-            Thread thread = new Thread(() -> {
+            Thread thread = Thread.ofVirtual().unstarted(() -> {
                 while (!stop.get()) {
                     QueryCache queryCache = map.getQueryCache(queryCacheName, Predicates.alwaysTrue(), true);
                     queryCache.destroy();
@@ -125,7 +125,7 @@ public class QueryCacheMemoryLeakTest extends HazelcastTestSupport {
         final AtomicBoolean stop = new AtomicBoolean(false);
         ArrayList<Thread> threads = new ArrayList<>();
         for (int i = 0; i < STRESS_TEST_THREAD_COUNT; i++) {
-            Thread thread = new Thread(() -> {
+            Thread thread = Thread.ofVirtual().unstarted(() -> {
                 while (!stop.get()) {
                     String name = mapNames[RandomPicker.getInt(0, 4)];
                     final IMap<Integer, Integer> map = node1.getMap(name);
@@ -218,7 +218,7 @@ public class QueryCacheMemoryLeakTest extends HazelcastTestSupport {
         final HazelcastInstance node = createHazelcastInstance(config);
         final String mapName = "test";
 
-        ExecutorService pool = Executors.newFixedThreadPool(STRESS_TEST_THREAD_COUNT);
+        ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor();
         final AtomicBoolean stop = new AtomicBoolean();
 
         for (int i = 0; i < 1000; i++) {

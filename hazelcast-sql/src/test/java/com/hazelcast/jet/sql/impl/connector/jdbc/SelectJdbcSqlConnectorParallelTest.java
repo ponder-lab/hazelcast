@@ -63,7 +63,7 @@ public class SelectJdbcSqlConnectorParallelTest extends JdbcSqlTestSupport {
     public void selectAllFromTableWhereIdColumnParallel() throws Exception {
         int repeatCount = 10000;
         Future<?>[] futures = new Future[THREAD_COUNT];
-        var pool = Executors.newFixedThreadPool(THREAD_COUNT);
+        var pool = Executors.newVirtualThreadPerTaskExecutor();
         try {
             for (int i = 0; i < THREAD_COUNT; ++i) {
                 futures[i] = pool.submit(() -> {

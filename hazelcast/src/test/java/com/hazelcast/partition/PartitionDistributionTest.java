@@ -173,7 +173,7 @@ public class PartitionDistributionTest extends HazelcastTestSupport {
         Thread[] threads = new Thread[dataNodeCount];
         for (int i = 0; i < dataNodeCount; i++) {
             final int instanceIndex = i;
-            threads[i] = new Thread(() -> partitionCounts[instanceIndex] = getLocalPartitionsCount(instances[instanceIndex]));
+            threads[i] = Thread.ofVirtual().unstarted(() -> partitionCounts[instanceIndex] = getLocalPartitionsCount(instances[instanceIndex]));
             threads[i].start();
         }
 

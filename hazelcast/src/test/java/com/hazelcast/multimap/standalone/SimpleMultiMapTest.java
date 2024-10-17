@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
 import static com.hazelcast.test.HazelcastTestSupport.sleepSeconds;
-import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 
 /**
  * Tests for MultiMap
@@ -53,7 +53,7 @@ public final class SimpleMultiMapTest {
 
     public static void main(String[] args) {
         boolean load = init(args);
-        ExecutorService es = newFixedThreadPool(threadCount);
+        ExecutorService es = newVirtualThreadPerTaskExecutor();
         final MultiMap<String, byte[]> map = instance.getMultiMap("default");
         final AtomicInteger gets = new AtomicInteger(0);
         final AtomicInteger puts = new AtomicInteger(0);

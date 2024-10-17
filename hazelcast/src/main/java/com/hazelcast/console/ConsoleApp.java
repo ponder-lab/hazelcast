@@ -221,7 +221,7 @@ public class ConsoleApp implements EntryListener<Object, Object>, ItemListener<O
         } else if (first.startsWith("&") && first.length() > 1) {
             final int fork = Integer.parseInt(first.substring(1));
             final String threadCommand = command.substring(first.length());
-            ExecutorService pool = Executors.newFixedThreadPool(fork);
+            ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor();
             for (int i = 0; i < fork; i++) {
                 final int threadID = i;
                 pool.submit(() -> {

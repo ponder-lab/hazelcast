@@ -111,7 +111,7 @@ public class ClientTxnMultiMapTest {
         final MultiMap multiMap = client.getMultiMap(mapName);
 
         final int threads = 10;
-        final ExecutorService ex = Executors.newFixedThreadPool(threads);
+        final ExecutorService ex = Executors.newVirtualThreadPerTaskExecutor();
         final CountDownLatch latch = new CountDownLatch(threads);
         final AtomicReference<Throwable> error = new AtomicReference<>(null);
 

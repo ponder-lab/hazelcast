@@ -75,7 +75,7 @@ public abstract class AbstractIndexConcurrencyTest extends HazelcastTestSupport 
         // run index creation and queries concurrently
         Thread[] threads = new Thread[QUERY_THREADS_NUM + 1];
 
-        threads[0] = new Thread(() -> {
+        threads[0] = Thread.ofVirtual().unstarted(() -> {
             try {
                 map.addIndex(indexType, indexAttribute);
             } catch (Throwable t) {
@@ -86,7 +86,7 @@ public abstract class AbstractIndexConcurrencyTest extends HazelcastTestSupport 
         threads[0].start();
 
         for (int i = 1; i < threads.length; i++) {
-            threads[i] = new Thread(() -> {
+            threads[i] = Thread.ofVirtual().unstarted(() -> {
                 try {
                     Collection<Person> persons = map.values(new SqlPredicate("age >= 5000"));
                     assertEquals(5000, persons.size());

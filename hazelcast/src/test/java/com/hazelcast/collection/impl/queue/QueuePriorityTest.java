@@ -61,7 +61,7 @@ public class QueuePriorityTest extends HazelcastTestSupport {
         TestHazelcastInstanceFactory factory = createHazelcastInstanceFactory(3);
         HazelcastInstance[] instances = factory.newInstances(config);
         queue = instances[0].getQueue(generateKeyOwnedBy(instances[1]));
-        threadPool = Executors.newCachedThreadPool();
+        threadPool = Executors.newVirtualThreadPerTaskExecutor();
     }
 
     @After

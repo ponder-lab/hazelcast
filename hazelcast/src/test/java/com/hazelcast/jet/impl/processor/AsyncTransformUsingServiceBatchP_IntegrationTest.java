@@ -101,7 +101,7 @@ public class AsyncTransformUsingServiceBatchP_IntegrationTest extends SimpleTest
         sinkList = instance().getList(randomMapName("sinkList"));
         jobConfig = new JobConfig().setProcessingGuarantee(EXACTLY_ONCE).setSnapshotIntervalMillis(0);
 
-        serviceFactory = sharedService(pctx -> Executors.newFixedThreadPool(8), ExecutorService::shutdown);
+        serviceFactory = sharedService(pctx -> Executors.newVirtualThreadPerTaskExecutor(), ExecutorService::shutdown);
     }
 
     @Test

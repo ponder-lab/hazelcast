@@ -78,7 +78,7 @@ public class SimpleMapTestFromClient {
         System.out.println("    Get Percentage: " + getPercentage);
         System.out.println("    Put Percentage: " + putPercentage);
         System.out.println(" Remove Percentage: " + (100 - (putPercentage + getPercentage)));
-        ExecutorService es = Executors.newFixedThreadPool(threadCount);
+        ExecutorService es = Executors.newVirtualThreadPerTaskExecutor();
         for (int i = 0; i < threadCount; i++) {
             es.submit((Runnable) () -> {
                 IMap<String, Object> map = client.getMap("default");

@@ -121,7 +121,7 @@ public class FlakeIdGeneratorProxyTest {
         int threadCount = 20;
         int iterationCount = 5_000;
 
-        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
         AtomicInteger errorCounter = new AtomicInteger();
         FlakeIdGeneratorConfig genConfig = new FlakeIdGeneratorConfig();
         for (int i = 0; i < iterationCount; i++) {

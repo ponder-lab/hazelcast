@@ -292,7 +292,7 @@ public class ClientServiceTest extends ClientTestSupport {
             clients.add(client);
         }
 
-        ExecutorService ex = Executors.newFixedThreadPool(4);
+        ExecutorService ex = Executors.newVirtualThreadPerTaskExecutor();
         try {
             for (final HazelcastInstance client : clients) {
                 ex.execute(client::shutdown);

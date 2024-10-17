@@ -89,7 +89,7 @@ public class CacheExpirationStressTest extends HazelcastTestSupport {
             Cache cache = createServerCachingProvider(instances[i])
                     .getCacheManager().createCache(cacheName, cacheConfig);
             cacheNameWithPrefix = cache.getName();
-            list.add(new Thread(new TestRunner(cache, done)));
+            list.add(Thread.ofVirtual().unstarted(new TestRunner(cache, done)));
         }
 
         for (Thread thread: list) {

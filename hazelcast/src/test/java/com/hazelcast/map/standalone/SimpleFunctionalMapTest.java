@@ -51,7 +51,7 @@ public final class SimpleFunctionalMapTest {
         int threadCount = 40;
         final Stats stats = new Stats();
         final HazelcastInstance hazelcast = Hazelcast.newHazelcastInstance(null);
-        ExecutorService es = Executors.newFixedThreadPool(threadCount);
+        ExecutorService es = Executors.newVirtualThreadPerTaskExecutor();
         for (int i = 0; i < threadCount; i++) {
             es.submit((Runnable) () -> {
                 IMap map = hazelcast.getMap("default");

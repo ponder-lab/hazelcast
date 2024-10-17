@@ -116,7 +116,7 @@ public class ClientCacheNearCacheCacheOnUpdateTest extends ClientNearCacheTestSu
             }
         };
 
-        ExecutorService executor = Executors.newCachedThreadPool();
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
         int numOfGetters = 2 * RuntimeAvailableProcessors.get();
         for (int i = 0; i < numOfGetters; i++) {

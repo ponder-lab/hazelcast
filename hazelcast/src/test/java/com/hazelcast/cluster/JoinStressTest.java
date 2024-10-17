@@ -96,10 +96,10 @@ public class JoinStressTest extends HazelcastTestSupport {
 
         for (int i = 0; i < count; i++) {
             final int index = i;
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 instances[index] = factory.newHazelcastInstance(createConfig());
                 latch.countDown();
-            }).start();
+            });
         }
 
         assertOpenEventually(latch);
@@ -259,7 +259,7 @@ public class JoinStressTest extends HazelcastTestSupport {
 
         Thread[] threads = new Thread[numThreads];
         for (int i = 0; i < numThreads; i++) {
-            threads[i] = new Thread(() -> {
+            threads[i] = Thread.ofVirtual().unstarted(() -> {
                 Random random = new Random();
                 for (int j = 0; j < loop; j++) {
                     int op = random.nextInt(3);

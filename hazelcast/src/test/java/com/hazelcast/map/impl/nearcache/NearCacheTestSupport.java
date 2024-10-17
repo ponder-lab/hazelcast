@@ -53,7 +53,7 @@ import static com.hazelcast.spi.properties.ClusterProperty.MAP_INVALIDATION_MESS
 import static com.hazelcast.spi.properties.ClusterProperty.PARTITION_COUNT;
 import static com.hazelcast.test.Accessors.getNode;
 import static java.lang.String.format;
-import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -154,7 +154,7 @@ public class NearCacheTestSupport extends HazelcastTestSupport {
             countDownLatch.countDown();
         };
 
-        ExecutorService executorService = newFixedThreadPool(threadCount);
+        ExecutorService executorService = newVirtualThreadPerTaskExecutor();
         for (int i = 0; i < threadCount; i++) {
             executorService.execute(task);
         }
