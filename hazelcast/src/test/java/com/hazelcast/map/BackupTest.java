@@ -217,22 +217,24 @@ public class BackupTest extends HazelcastTestSupport {
 
         for (int i = 0; i < nodeCount; i++) {
             final int index = i;
-            Thread.ofVirtual().start(() -> {
-                try {
-                    sleepMillis(index * ThreadLocalRandom.current().nextInt(1_000));
-                    HazelcastInstance instance = nodeFactory.newHazelcastInstance(config);
-                    if (!Accessors.getNode(instance).isMaster()) {
-                        // do not run on master node,
-                        // let partition assignment be made during put ops.
-                        IMap map = instance.getMap(mapName);
-                        for (int j = 0; j < count; j++) {
-                            map.put(getName() + "-" + j, "value");
+            new Thread() {
+                public void run() {
+                    try {
+                        sleepMillis(index * ThreadLocalRandom.current().nextInt(1_000));
+                        HazelcastInstance instance = nodeFactory.newHazelcastInstance(config);
+                        if (!Accessors.getNode(instance).isMaster()) {
+                            // do not run on master node,
+                            // let partition assignment be made during put ops.
+                            IMap map = instance.getMap(mapName);
+                            for (int j = 0; j < count; j++) {
+                                map.put(getName() + "-" + j, "value");
+                            }
                         }
+                    } finally {
+                        latch.countDown();
                     }
-                } finally {
-                    latch.countDown();
                 }
-            });
+            }.start();
         }
 
         assertTrue(latch.await(5, TimeUnit.MINUTES));
@@ -291,13 +293,13 @@ public class BackupTest extends HazelcastTestSupport {
         final CountDownLatch latch = new CountDownLatch(threads);
         for (int i = 0; i < threads; i++) {
             final int index = i;
-            Thread.ofVirtual().start(() -> {
+            new Thread(() -> {
                 for (int k = (index * perThreadSize); k < (index + 1) * perThreadSize; k++) {
                     map.put(k, k);
                     sleepMillis(1);
                 }
                 latch.countDown();
-            });
+            }).start();
         }
 
         assertTrue(latch.await(5, TimeUnit.MINUTES));
@@ -336,13 +338,13 @@ public class BackupTest extends HazelcastTestSupport {
         final CountDownLatch latch = new CountDownLatch(threads);
         for (int i = 0; i < threads; i++) {
             final int index = i;
-            Thread.ofVirtual().start(() -> {
+            new Thread(() -> {
                 for (int k = (index * perThreadSize); k < (index + 1) * perThreadSize; k++) {
                     map.remove(k);
                     sleepMillis(1);
                 }
                 latch.countDown();
-            });
+            }).start();
         }
 
         assertTrue(latch.await(5, TimeUnit.MINUTES));
