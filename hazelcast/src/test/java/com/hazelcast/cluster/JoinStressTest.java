@@ -280,11 +280,10 @@ public class JoinStressTest extends HazelcastTestSupport {
         HazelcastInstance i4 = Hazelcast.newHazelcastInstance(config);
 
         final IMap<Integer, Integer> map = i4.getMap("a");
-        int numThreads = 40;
         final int loop = 5000;
 
-        Thread[] threads = new Thread[numThreads];
-        for (int i = 0; i < numThreads; i++) {
+        Thread[] threads = new Thread[count];
+        for (int i = 0; i < count; i++) {
             threads[i] = Thread.ofVirtual().unstarted(() -> {
                 Random random = new Random();
                 for (int j = 0; j < loop; j++) {
