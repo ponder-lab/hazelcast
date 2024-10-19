@@ -310,7 +310,7 @@ public class JoinStressTest extends HazelcastTestSupport {
         //Should not throw java.lang.IllegalStateException: Node failed to start!
         Hazelcast.newHazelcastInstance(config);
 
-        for (int i = 0; i < numThreads; i++) {
+        for (int i = 0; i < count; i++) {
             threads[i].join();
         }
     }
