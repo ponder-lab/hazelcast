@@ -339,7 +339,7 @@ public class DistributedObjectTest extends HazelcastTestSupport {
         final CountDownLatch latch = new CountDownLatch(threads);
 
         for (int i = 0; i < threads; i++) {
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 for (int j = 0; j < 1000; j++) {
                     try {
                         hz.getDistributedObject(serviceName, objectName);
@@ -350,7 +350,7 @@ public class DistributedObjectTest extends HazelcastTestSupport {
                     LockSupport.parkNanos(1);
                 }
                 latch.countDown();
-            }).start();
+            });
         }
         assertOpenEventually(latch, 30);
     }

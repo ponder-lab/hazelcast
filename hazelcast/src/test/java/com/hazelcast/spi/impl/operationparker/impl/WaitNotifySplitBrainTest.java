@@ -65,13 +65,13 @@ public class WaitNotifySplitBrainTest extends SplitBrainTestSupport {
 
     private void startTakingFromQueue(final IQueue<Object> queue) {
         for (int i = 0; i < POLL_COUNT; i++) {
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 try {
                     queue.take();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-            }).start();
+            });
         }
     }
 

@@ -65,7 +65,7 @@ public class QueuePriorityWithDuplicateCheckTest extends HazelcastTestSupport {
                 .setPriorityComparatorClassName("com.hazelcast.collection.impl.queue.model.PriorityElementComparator");
         HazelcastInstance hz = createHazelcastInstance(config);
         queue = new PriorityElementTaskQueueImpl(hz.getQueue(queueName), hz.getMap(mapName));
-        threadPool = Executors.newCachedThreadPool();
+        threadPool = Executors.newVirtualThreadPerTaskExecutor();
     }
 
     @After

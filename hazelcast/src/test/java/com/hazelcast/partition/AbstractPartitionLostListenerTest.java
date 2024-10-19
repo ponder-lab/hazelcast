@@ -87,7 +87,7 @@ public abstract class AbstractPartitionLostListenerTest extends HazelcastTestSup
         final List<Thread> threads = new ArrayList<>();
         final CountDownLatch latch = new CountDownLatch(instances.size());
         for (final HazelcastInstance instance : instances) {
-            threads.add(new Thread(() -> {
+            threads.add(Thread.ofVirtual().unstarted(() -> {
                 if (nodeLeaveType == NodeLeaveType.SHUTDOWN) {
                     instance.getLifecycleService().shutdown();
                     latch.countDown();

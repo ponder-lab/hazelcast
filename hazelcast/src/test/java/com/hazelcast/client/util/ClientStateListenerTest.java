@@ -139,7 +139,7 @@ public class ClientStateListenerTest extends ClientTestSupport {
     @Test(timeout = MINUTE * 10)
     public void testClientReconnectModeAsyncConnectedMultipleThreads() {
         int numThreads = 10;
-        ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
         ClientConfig clientConfig = new ClientConfig();
         final ClientStateListener listener = new ClientStateListener(clientConfig);

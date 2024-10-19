@@ -73,7 +73,7 @@ import static com.hazelcast.internal.nearcache.impl.NearCacheTestUtils.setEvicti
 import static com.hazelcast.internal.nearcache.impl.NearCacheTestUtils.waitUntilLoaded;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -1469,7 +1469,7 @@ public abstract class AbstractNearCacheBasicTest<NK, NV> extends HazelcastTestSu
             countDownLatch.countDown();
         };
 
-        ExecutorService executorService = newFixedThreadPool(threadCount);
+        ExecutorService executorService = newVirtualThreadPerTaskExecutor();
         for (int i = 0; i < threadCount; i++) {
             executorService.execute(task);
         }

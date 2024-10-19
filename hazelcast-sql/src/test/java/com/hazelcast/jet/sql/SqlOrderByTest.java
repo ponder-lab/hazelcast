@@ -630,7 +630,7 @@ public class SqlOrderByTest extends HazelcastTestSupport {
         map.addIndex(indexConfig);
 
         int threadsCount = RuntimeAvailableProcessors.get() - 2;
-        ExecutorService executor = Executors.newFixedThreadPool(threadsCount);
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
         int keysPerThread = 5000;
         CountDownLatch latch = new CountDownLatch(threadsCount);
@@ -683,7 +683,7 @@ public class SqlOrderByTest extends HazelcastTestSupport {
         map.addIndex(indexConfig);
 
         int threadsCount = RuntimeAvailableProcessors.get() - 2;
-        ExecutorService executor = Executors.newFixedThreadPool(threadsCount);
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
         int keysPerThread = 2500;
         CountDownLatch latch = new CountDownLatch(threadsCount);

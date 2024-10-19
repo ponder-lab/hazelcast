@@ -89,7 +89,7 @@ public class CacheListenerTest extends HazelcastTestSupport {
         final CountDownLatch latch = new CountDownLatch(threadCount);
         final AtomicBoolean shutdown = new AtomicBoolean(false);
         for (int i = 0; i < threadCount; i++) {
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 Random rand = new Random();
                 for (int i1 = 0; i1 < putCount && !shutdown.get(); i1++) {
                     String key = String.valueOf(rand.nextInt(putCount));
@@ -98,7 +98,7 @@ public class CacheListenerTest extends HazelcastTestSupport {
                     actualPutCount.incrementAndGet();
                 }
                 latch.countDown();
-            }).start();
+            });
         }
 
         if (!latch.await(ASSERT_TRUE_EVENTUALLY_TIMEOUT, TimeUnit.SECONDS)) {
@@ -291,7 +291,7 @@ public class CacheListenerTest extends HazelcastTestSupport {
         int threads = 4;
         final CountDownLatch latch = new CountDownLatch(threads);
         for (int i = 0; i < threads; i++) {
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 Random rand = new Random();
                 while (true) {
                     try {
@@ -301,7 +301,7 @@ public class CacheListenerTest extends HazelcastTestSupport {
                     }
                 }
                 latch.countDown();
-            }).start();
+            });
         }
 
         // wait a little for putting threads to start

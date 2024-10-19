@@ -80,7 +80,7 @@ public class QueryCacheNoEventLossTest extends HazelcastTestSupport {
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < parallelNodeCount; i++) {
             // creates CLEAR_ALL events
-            Thread doMapClear = new Thread(() -> {
+            Thread doMapClear = Thread.ofVirtual().unstarted(() -> {
                 IMap map = newQueryCacheOnNewNode(eventLostCounter);
 
                 long endMillis = System.currentTimeMillis() + SECONDS.toMillis(TEST_DURATION_SECONDS);

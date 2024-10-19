@@ -144,7 +144,7 @@ public class InterceptorRegistryTest extends HazelcastTestSupport {
 
         List<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            Thread thread = new Thread(() -> {
+            Thread thread = Thread.ofVirtual().unstarted(() -> {
                 TestMapInterceptor interceptor = new TestMapInterceptor();
                 while (!stop.get()) {
                     registry.register(interceptor.id, interceptor);

@@ -105,7 +105,7 @@ public class CacheCreationTest extends HazelcastTestSupport {
                 errorCounter.incrementAndGet();
             }
         };
-        ExecutorService executorService = Executors.newFixedThreadPool(threadCount);
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
         for (int i = 0; i < threadCount; i++) {
             executorService.submit(getCache);
         }
@@ -119,7 +119,7 @@ public class CacheCreationTest extends HazelcastTestSupport {
 
     @Test
     public void createOrGetConcurrentlySingleCache_fromMultiProviders() {
-        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
         final CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
         for (int i = 0; i < THREAD_COUNT; i++) {
@@ -136,7 +136,7 @@ public class CacheCreationTest extends HazelcastTestSupport {
 
     @Test
     public void createConcurrentlyMultipleCaches_fromMultipleProviders() {
-        ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
         final CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
         for (int i = 0; i < THREAD_COUNT; i++) {

@@ -70,7 +70,7 @@ public class SerializationConcurrencyTest {
         final int k = 10;
         final AtomicBoolean error = new AtomicBoolean(false);
         final CountDownLatch latch = new CountDownLatch(k);
-        ExecutorService ex = Executors.newCachedThreadPool();
+        ExecutorService ex = Executors.newVirtualThreadPerTaskExecutor();
         for (int i = 0; i < k; i++) {
             ex.execute(new Runnable() {
                 final Random rand = new Random();

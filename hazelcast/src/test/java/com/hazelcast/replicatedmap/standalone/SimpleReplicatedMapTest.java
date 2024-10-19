@@ -111,7 +111,7 @@ public class SimpleReplicatedMapTest {
 
     private void start() throws Exception {
         printVariables();
-        ExecutorService es = Executors.newFixedThreadPool(threadCount);
+        ExecutorService es = Executors.newVirtualThreadPerTaskExecutor();
         startPrintStats();
         load(es);
         run(es);

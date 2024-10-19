@@ -181,10 +181,10 @@ public abstract class AbstractGracefulShutdownCorrectnessTest extends PartitionC
                 final HazelcastInstance hz = instances.remove(0);
                 addresses.add(getNode(hz).getThisAddress());
 
-                new Thread(() -> {
+                Thread.ofVirtual().start(() -> {
                     hz.shutdown();
                     latch.countDown();
-                }).start();
+                });
             }
             assertTrue(latch.await(2, TimeUnit.MINUTES));
             return addresses;

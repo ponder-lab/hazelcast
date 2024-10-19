@@ -44,14 +44,14 @@ public class ClientQueuePerformanceBenchmark extends HazelcastTestSupport {
         Hazelcast.newHazelcastInstance();
         HazelcastInstance client = HazelcastClient.newHazelcastClient(null);
         queue = client.getQueue("test");
-        //test1();
-        test2();
+        test1();
+        //test2();
     }
 
     private static void test1() {
         final Random rnd = new Random();
         for (int i = 0; i < THREAD_COUNT; i++) {
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 while (true) {
                     int random = rnd.nextInt(100);
                     if (random > 54) {
@@ -65,10 +65,10 @@ public class ClientQueuePerformanceBenchmark extends HazelcastTestSupport {
                         TOTAL_PEEK.incrementAndGet();
                     }
                 }
-            }).start();
+            });
         }
 
-        new Thread(() -> {
+        Thread.ofVirtual().start(() -> {
             while (true) {
                 try {
                     int size = queue.size();
@@ -86,7 +86,7 @@ public class ClientQueuePerformanceBenchmark extends HazelcastTestSupport {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        });
 
         while (true) {
             int sleepTime = 10;

@@ -453,7 +453,7 @@ public class EvictionTest extends HazelcastTestSupport {
         final IMap firstMap = instances[0].getMap(mapName);
         final CountDownLatch latch = new CountDownLatch(clusterSize);
         final AtomicBoolean success = new AtomicBoolean(true);
-        new Thread(() -> {
+        Thread.ofVirtual().start(() -> {
             sleepAtLeastSeconds(1);
             while (latch.getCount() != 0) {
                 int mapSize = firstMap.size();
@@ -463,16 +463,16 @@ public class EvictionTest extends HazelcastTestSupport {
                 }
                 sleepAtLeastSeconds(1);
             }
-        }).start();
+        });
 
         for (int i = 0; i < clusterSize; i++) {
             final IMap<String, Integer> map = instances[i].getMap(mapName);
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 for (int j = 0; j < size; j++) {
                     map.put(clusterSize + "-" + j, j);
                 }
                 latch.countDown();
-            }).start();
+            });
         }
 
         assertTrue(latch.await(10, TimeUnit.MINUTES));
@@ -501,7 +501,7 @@ public class EvictionTest extends HazelcastTestSupport {
         final int partitionCount = instances[0].getPartitionService().getPartitions().size();
         final CountDownLatch latch = new CountDownLatch(clusterSize);
         final AtomicBoolean error = new AtomicBoolean(false);
-        new Thread(() -> {
+        Thread.ofVirtual().start(() -> {
             sleepAtLeastSeconds(1);
             while (latch.getCount() != 0) {
                 if (firstMap.size() > (size * partitionCount * 1.2)) {
@@ -509,16 +509,16 @@ public class EvictionTest extends HazelcastTestSupport {
                 }
                 sleepAtLeastSeconds(1);
             }
-        }).start();
+        });
 
         for (int i = 0; i < clusterSize; i++) {
             final IMap<String, Integer> map = instances[i].getMap(mapName);
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 for (int j = 0; j < 10000; j++) {
                     map.put(clusterSize + "-" + j, j);
                 }
                 latch.countDown();
-            }).start();
+            });
         }
 
         assertOpenEventually(latch);
