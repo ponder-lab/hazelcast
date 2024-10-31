@@ -113,7 +113,6 @@ public class JoinStressTest extends HazelcastTestSupport {
     }
 
     @Test(timeout = TEN_MINUTES_IN_MILLIS)
-    @Benchmark
     public void testJoinCompletesCorrectlyWhenMultipleNodesStartedParallel() {
         final TestHazelcastInstanceFactory factory = new TestHazelcastInstanceFactory(count);
         final HazelcastInstance[] instances = new HazelcastInstance[count];
