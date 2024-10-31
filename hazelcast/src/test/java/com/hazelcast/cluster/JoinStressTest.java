@@ -269,7 +269,6 @@ public class JoinStressTest extends HazelcastTestSupport {
     }
 
     @Test(timeout = 300000)
-    @Benchmark
     public void testJoinWhenMemberClosedInBetween() throws InterruptedException {
         //Test is expecting to all can join safely.
         // On the failed case the last opened instance throws java.lang.IllegalStateException: Node failed to start!
