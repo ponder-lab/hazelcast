@@ -151,6 +151,3 @@ We owe (the good parts of) our CLI tool's user experience to
 Copyright (c) 2008-2024, Hazelcast, Inc. All Rights Reserved.
 
 Visit [www.hazelcast.com](http://www.hazelcast.com/) for more info.
-
-## Additional JMH tests (in java21_jmh_additional and fibers_jmh_additional)
-To run the new JMH benchmarks, it works to run `mvn clean package -DskipTests -T1`  followed by `mvn exec:exec@run-benchmarks` from inside the hazelcast directory
