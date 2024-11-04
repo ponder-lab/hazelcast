@@ -131,6 +131,9 @@ When developing a PR it is sufficient to run your new tests and some
 related subset of tests locally. Our PR builder will take care of running
 the full test suite.
 
+## Additional JMH tests (in java21_jmh_additional and fibers_jmh_additional)
+To run the JMH benchmarks, it works to run `mvn clean package -DskipTests` from the root directory, followed by `mvn exec:exec@run-benchmarks` from the hazelcast directory.
+
 ## License
 
 Source code in this repository is covered by one of two licenses:
