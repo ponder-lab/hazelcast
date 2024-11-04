@@ -18,12 +18,11 @@ jobs:
       matrix:
         language: [ 'java' ]
 
-    steps:
-      - name: Setup local maven cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2/repository
-          key: maven-cache-${{ hashFiles('**/pom.xml') }}
-
-      - name: Run tests
-        run: ./mvnw test
+    - name: Setup local maven cache
+      uses: actions/cache@v4
+      with:
+        path: ~/.m2/repository
+        key: maven-cache-${{ hashFiles('**/pom.xml') }}
+        
+    - name: Run tests
+      run: ./mvnw test
