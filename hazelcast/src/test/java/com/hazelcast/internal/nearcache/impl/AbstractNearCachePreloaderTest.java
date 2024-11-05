@@ -316,7 +316,7 @@ public abstract class AbstractNearCachePreloaderTest<NK, NV> extends HazelcastTe
     public void testPreloadNearCacheLock_withSharedConfig_concurrently() {
         nearCacheConfig.getPreloaderConfig().setDirectory("");
 
-        ThreadPoolExecutor pool = (ThreadPoolExecutor) newVirtualThreadPerTaskExecutor();
+        ExecutorService pool = newVirtualThreadPerTaskExecutor();
         final NearCacheTestContext<String, String, NK, NV> context = createContext(true);
         final CountDownLatch startLatch = new CountDownLatch(THREAD_COUNT);
         final CountDownLatch finishLatch = new CountDownLatch(THREAD_COUNT);
