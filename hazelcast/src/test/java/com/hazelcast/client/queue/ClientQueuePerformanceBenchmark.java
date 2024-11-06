@@ -44,8 +44,8 @@ public class ClientQueuePerformanceBenchmark extends HazelcastTestSupport {
         Hazelcast.newHazelcastInstance();
         HazelcastInstance client = HazelcastClient.newHazelcastClient(null);
         queue = client.getQueue("test");
-        test1();
-        //test2();
+        //test1();
+        test2();
     }
 
     private static void test1() {
