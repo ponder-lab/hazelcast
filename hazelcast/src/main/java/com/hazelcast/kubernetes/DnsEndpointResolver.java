@@ -81,7 +81,7 @@ final class DnsEndpointResolver
     private List<DiscoveryNode> lookup()
             throws UnknownHostException, InterruptedException, ExecutionException, TimeoutException {
         Set<String> addresses = new HashSet<>();
-	System.out.println("Refactoring in DnsEndpointResolver hit");
+        System.out.println("Refactoring in DnsEndpointResolver hit");
         Future<InetAddress[]> future = DNS_LOOKUP_SERVICE.submit(() -> rawLookupProvider.getAddresses(serviceDns));
 
         try {
