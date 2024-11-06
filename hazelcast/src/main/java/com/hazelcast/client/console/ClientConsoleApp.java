@@ -281,6 +281,7 @@ public class ClientConsoleApp implements EntryListener, ItemListener, MessageLis
             println("ops/s = " + repeat * ONE_THOUSAND / (Clock.currentTimeMillis() - t0));
         } else if (first.startsWith("&") && first.length() > 1) {
             final int fork = Integer.parseInt(first.substring(1));
+            System.out.println("Refactoring in ClientConsoleApp hit");
             ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor();
             final String threadCommand = command.substring(first.length());
             for (int i = 0; i < fork; i++) {
