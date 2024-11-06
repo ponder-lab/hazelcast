@@ -99,7 +99,7 @@ public class ClientQueryCacheMemoryLeakTest extends HazelcastTestSupport {
         final AtomicBoolean stop = new AtomicBoolean(false);
         ArrayList<Thread> threads = new ArrayList<>();
         for (int i = 0; i < STRESS_TEST_THREAD_COUNT; i++) {
-            // Refactoring this causes deadlock due to synchronization/locking
+            // Refactoring this to Thread.ofVirtual().unstarted(...) causes deadlock due to synchronization/locking
             Thread thread = new Thread(() -> {
                 while (!stop.get()) {
                     String name = mapNames[getInt(0, 4)];
@@ -178,7 +178,7 @@ public class ClientQueryCacheMemoryLeakTest extends HazelcastTestSupport {
         final AtomicBoolean stop = new AtomicBoolean(false);
         ArrayList<Thread> threads = new ArrayList<>();
         for (int i = 0; i < STRESS_TEST_THREAD_COUNT; i++) {
-            // Refactoring this causes deadlock due to synchronization/locking
+            // Refactoring this to Thread.ofVirtual().unstarted(...) causes deadlock due to synchronization/locking
             Thread thread = new Thread(() -> {
                 while (!stop.get()) {
                     QueryCache queryCache = map.getQueryCache("a", Predicates.alwaysTrue(), true);
@@ -240,7 +240,7 @@ public class ClientQueryCacheMemoryLeakTest extends HazelcastTestSupport {
         final HazelcastInstance client = factory.newHazelcastClient();
         final String mapName = "test";
 
-        // Refactoring this causes deadlock due to synchronization/locking
+        // Refactoring this to Executors.newVirtualThreadPerTaskExecutor() causes deadlock due to synchronization/locking
         ExecutorService pool = Executors.newFixedThreadPool(STRESS_TEST_THREAD_COUNT);
         final AtomicBoolean stop = new AtomicBoolean(false);
 
