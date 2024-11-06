@@ -70,6 +70,7 @@ public class SecondsBasedEntryTaskSchedulerStressTest {
                 = new SecondsBasedEntryTaskScheduler<>(executorService, processor, ScheduleType.FOR_EACH);
 
         for (int i = 0; i < NUMBER_OF_THREADS; i++) {
+            // Refactorable since run() is the only overridden method
             final Thread thread = Thread.ofVirtual().unstarted(() -> {
                 Random random = new Random();
                 for (int j = 0; j < NUMBER_OF_EVENTS_PER_THREAD; j++) {
@@ -99,6 +100,7 @@ public class SecondsBasedEntryTaskSchedulerStressTest {
         final Map<Integer, Integer> latestValues = new ConcurrentHashMap<>();
 
         for (int i = 0; i < NUMBER_OF_THREADS; i++) {
+            // Refactorable by copying return value of only non-run() overridden method into body of Runnable
             final Thread thread = Thread.ofVirtual().unstarted(() -> {
                 Random random = new Random();
                 for (int j = 0; j < NUMBER_OF_EVENTS_PER_THREAD; j++) {
