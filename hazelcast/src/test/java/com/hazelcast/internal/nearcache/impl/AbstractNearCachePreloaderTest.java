@@ -38,7 +38,7 @@ import java.io.File;
 import java.nio.ByteOrder;
 import java.nio.channels.OverlappingFileLockException;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.ExecutorService;
 
 import static com.hazelcast.internal.nearcache.impl.AbstractNearCachePreloaderTest.KeyType.INTEGER;
 import static com.hazelcast.internal.nearcache.impl.AbstractNearCachePreloaderTest.KeyType.STRING;
