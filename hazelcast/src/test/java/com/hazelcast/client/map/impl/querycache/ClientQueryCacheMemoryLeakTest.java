@@ -240,7 +240,8 @@ public class ClientQueryCacheMemoryLeakTest extends HazelcastTestSupport {
         final HazelcastInstance client = factory.newHazelcastClient();
         final String mapName = "test";
 
-        ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor();
+        // Refactoring this causes deadlock due to synchronization/locking
+        ExecutorService pool = Executors.newFixedThreadPool(STRESS_TEST_THREAD_COUNT);
         final AtomicBoolean stop = new AtomicBoolean(false);
 
         for (int i = 0; i < 1000; i++) {
