@@ -154,7 +154,7 @@ public class JobExecuteClientSuccessTest extends JetTestSupport {
     public void test_stress_jarExecute_whenResourceUploadIsEnabled() {
         createCluster();
 
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
         int jobLimit = 50;
         for (int index = 0; index < jobLimit; index++) {

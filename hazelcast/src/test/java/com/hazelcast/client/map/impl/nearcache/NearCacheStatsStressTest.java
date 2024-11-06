@@ -99,7 +99,7 @@ public class NearCacheStatsStressTest extends HazelcastTestSupport {
 
     @Test
     public void stress_stats_by_doing_put_and_remove() throws Exception {
-        ExecutorService pool = Executors.newFixedThreadPool(4);
+        ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor();
         pool.execute(new Put());
         pool.execute(new Put());
         pool.execute(new Remove());

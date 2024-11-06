@@ -97,7 +97,7 @@ public class AbstractJsonGetterTest {
         AtomicBoolean running = new AtomicBoolean();
         for (int i = 0; i < numberOfThreads; i++) {
             getterRunners[i] = new GetterRunner(running);
-            threads[i] = new Thread(getterRunners[i]);
+            threads[i] = Thread.ofVirtual().unstarted(getterRunners[i]);
             threads[i].start();
         }
         running.set(true);

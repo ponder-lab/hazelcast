@@ -208,7 +208,7 @@ public class HazelcastXATest extends HazelcastTestSupport {
         txn(instance);
         //Perform 100 transactions with 5 threads
         int size = 100;
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
         final CountDownLatch latch = new CountDownLatch(size);
         for (int i = 0; i < size; i++) {
             executorService.execute(() -> {

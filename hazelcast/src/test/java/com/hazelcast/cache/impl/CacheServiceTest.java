@@ -101,7 +101,7 @@ public class CacheServiceTest {
             throws ExecutionException, InterruptedException {
         CacheService cacheService = new TestCacheService(mockNodeEngine, false);
 
-        executorService = Executors.newFixedThreadPool(CONCURRENCY);
+        executorService = Executors.newVirtualThreadPerTaskExecutor();
         List<Future<CacheConfig>> futures = new ArrayList<>();
         for (int i = 0; i < CONCURRENCY; i++) {
             futures.add(
@@ -130,7 +130,7 @@ public class CacheServiceTest {
     public void testPutCacheConfigConcurrently_whenExceptionThrownFromAdditionalSetup() {
         CacheService cacheService = new TestCacheService(mockNodeEngine, true);
 
-        executorService = Executors.newFixedThreadPool(CONCURRENCY);
+        executorService = Executors.newVirtualThreadPerTaskExecutor();
         List<Future<CacheConfig>> futures = new ArrayList<>();
         for (int i = 0; i < CONCURRENCY; i++) {
             futures.add(

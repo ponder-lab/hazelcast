@@ -164,7 +164,7 @@ public class ClientClusterStateTest {
         final CountDownLatch threadsFinished = new CountDownLatch(numThreads);
         final CountDownLatch threadsStarted = new CountDownLatch(numThreads);
 
-        ExecutorService executor = Executors.newCachedThreadPool();
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
         for (int i = 0; i < numThreads; i++) {
             executor.execute(new Runnable() {
                 @Override

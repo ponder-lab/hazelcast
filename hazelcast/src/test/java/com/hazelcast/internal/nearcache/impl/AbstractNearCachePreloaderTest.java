@@ -38,7 +38,7 @@ import java.io.File;
 import java.nio.ByteOrder;
 import java.nio.channels.OverlappingFileLockException;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.ExecutorService;
 
 import static com.hazelcast.internal.nearcache.impl.AbstractNearCachePreloaderTest.KeyType.INTEGER;
 import static com.hazelcast.internal.nearcache.impl.AbstractNearCachePreloaderTest.KeyType.STRING;
@@ -59,7 +59,7 @@ import static com.hazelcast.test.Accessors.getSerializationService;
 import static com.hazelcast.test.TimeConstants.MINUTE;
 import static java.lang.String.format;
 import static java.lang.Thread.currentThread;
-import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -316,7 +316,8 @@ public abstract class AbstractNearCachePreloaderTest<NK, NV> extends HazelcastTe
     public void testPreloadNearCacheLock_withSharedConfig_concurrently() {
         nearCacheConfig.getPreloaderConfig().setDirectory("");
 
-        ThreadPoolExecutor pool = (ThreadPoolExecutor) newFixedThreadPool(THREAD_COUNT);
+        // Executors.newVirtualThreadPerTaskExecutor() gives a ThreadPerTaskExecutor, which is not castable to a ThreadPoolExecutor (which newFixedThreadPool does give)
+        ExecutorService pool = newVirtualThreadPerTaskExecutor();
         final NearCacheTestContext<String, String, NK, NV> context = createContext(true);
         final CountDownLatch startLatch = new CountDownLatch(THREAD_COUNT);
         final CountDownLatch finishLatch = new CountDownLatch(THREAD_COUNT);

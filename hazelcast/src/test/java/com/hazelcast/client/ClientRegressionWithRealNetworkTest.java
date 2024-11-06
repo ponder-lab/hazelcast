@@ -93,7 +93,7 @@ public class ClientRegressionWithRealNetworkTest extends ClientTestSupport {
     @Test
     public void testClientConnectionBeforeServerReady() {
         String clusterName = randomString();
-        ExecutorService executorService = Executors.newFixedThreadPool(2);
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
         executorService.submit(() -> {
             Config config = new Config();
             config.setClusterName(clusterName);

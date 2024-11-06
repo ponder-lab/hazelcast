@@ -114,7 +114,7 @@ public final class SimpleMapTest {
 
     private void start() throws InterruptedException {
         printVariables();
-        ExecutorService es = Executors.newFixedThreadPool(threadCount);
+        ExecutorService es = Executors.newVirtualThreadPerTaskExecutor();
         startPrintStats();
         load(es);
         run(es);

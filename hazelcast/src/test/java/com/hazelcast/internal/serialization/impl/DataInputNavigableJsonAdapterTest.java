@@ -132,7 +132,7 @@ public class DataInputNavigableJsonAdapterTest {
         CountDownLatch latch = new CountDownLatch(1);
         Thread[] threads = new Thread[concurrency];
         for (int i = 0; i < concurrency; i++) {
-            threads[i] = new Thread(() -> {
+            threads[i] = Thread.ofVirtual().unstarted(() -> {
                 try {
                     latch.await();
                     for (byte[] sample : SAMPLE_BYTES) {

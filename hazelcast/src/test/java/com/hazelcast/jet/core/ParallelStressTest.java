@@ -54,7 +54,7 @@ public class ParallelStressTest extends JetTestSupport {
         dag.newVertex("p", TestProcessors.ListSource.supplier(Arrays.asList(1, 2, 3)));
 
         HazelcastInstance instance = createHazelcastInstance();
-        ExecutorService executor = Executors.newFixedThreadPool(8);
+        ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
         List<Future<Job>> futures = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
             futures.add(executor.submit(() -> instance.getJet().newJob(dag)));

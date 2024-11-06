@@ -380,7 +380,7 @@ public class GrpcServiceTest extends SimpleTestInClusterSupport {
 
     private static Server createServer(BindableService service) throws IOException {
         Server server = ServerBuilder.forPort(0)
-                                     .executor(Executors.newFixedThreadPool(4))
+                                     .executor(Executors.newVirtualThreadPerTaskExecutor())
                                      .addService(service)
                                      .build();
         server.start();

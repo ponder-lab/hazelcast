@@ -94,7 +94,7 @@ public class CardinalityEstimatorAdvancedTest extends HazelcastTestSupport {
         final String name = "testSpawnNodeInParallel";
         CardinalityEstimator estimator = instance.getCardinalityEstimator(name);
         estimator.add(1L);
-        final ExecutorService ex = Executors.newFixedThreadPool(parallel);
+        final ExecutorService ex = Executors.newVirtualThreadPerTaskExecutor();
         try {
             for (int i = 0; i < total / parallel; i++) {
                 final HazelcastInstance[] instances = new HazelcastInstance[parallel];

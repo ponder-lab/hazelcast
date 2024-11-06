@@ -71,7 +71,7 @@ public class SampleableConcurrentHashMapTest extends HazelcastTestSupport {
         final CountDownLatch latch = new CountDownLatch(COUNT);
 
         for (int i = 0; i < COUNT; i++) {
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 try {
                     assertEquals("value", map.applyIfAbsent("key", input -> "value1"));
                 } catch (Throwable e) {
@@ -79,7 +79,7 @@ public class SampleableConcurrentHashMapTest extends HazelcastTestSupport {
                 } finally {
                     latch.countDown();
                 }
-            }).start();
+            });
         }
 
         latch.await(20, TimeUnit.SECONDS);

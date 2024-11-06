@@ -92,7 +92,7 @@ public class IndexStatsMoreThreadsTest extends HazelcastTestSupport {
         final CountDownLatch startGate = new CountDownLatch(1);
         final CountDownLatch endGate = new CountDownLatch(THREADS_NUMBER);
         for (int i = 0; i < THREADS_NUMBER; i++) {
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 try {
                     startGate.await();
                 } catch (InterruptedException ex) {
@@ -107,7 +107,7 @@ public class IndexStatsMoreThreadsTest extends HazelcastTestSupport {
                 } finally {
                     endGate.countDown();
                 }
-            }).start();
+            });
         }
 
         startGate.countDown();
@@ -132,7 +132,7 @@ public class IndexStatsMoreThreadsTest extends HazelcastTestSupport {
         final CountDownLatch endGate = new CountDownLatch(THREADS_NUMBER);
         for (int i = 0; i < THREADS_NUMBER; i++) {
             final int threadOrder = i;
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 try {
                     startGate.await();
                 } catch (InterruptedException ex) {
@@ -148,7 +148,7 @@ public class IndexStatsMoreThreadsTest extends HazelcastTestSupport {
                 } finally {
                     endGate.countDown();
                 }
-            }).start();
+            });
         }
 
         startGate.countDown();

@@ -63,7 +63,7 @@ public class SqlSplitBrainTest extends JetSplitBrainTestSupport {
 
             for (int i = 0, threadsLength = threads.length; i < threadsLength; i++) {
                 HazelcastInstance inst = createHazelcastClient();
-                threads[i] = new Thread(() -> {
+                threads[i] = Thread.ofVirtual().unstarted(() -> {
                     int numQueriesLocal = 0;
                     while (!done.get()) {
                         try {

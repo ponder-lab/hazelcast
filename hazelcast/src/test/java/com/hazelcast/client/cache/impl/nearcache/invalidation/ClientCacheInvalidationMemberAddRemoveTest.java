@@ -126,7 +126,7 @@ public class ClientCacheInvalidationMemberAddRemoveTest extends ClientNearCacheT
         ArrayList<Thread> threads = new ArrayList<>();
 
         // continuously adds and removes member
-        Thread shadowMember = new Thread(() -> {
+        Thread shadowMember = Thread.ofVirtual().unstarted(() -> {
             while (!stopTest.get()) {
                 HazelcastInstance member = hazelcastFactory.newHazelcastInstance(config);
                 sleepSeconds(5);
@@ -138,7 +138,7 @@ public class ClientCacheInvalidationMemberAddRemoveTest extends ClientNearCacheT
 
         for (int i = 0; i < NEAR_CACHE_POPULATE_THREAD_COUNT; i++) {
             // populates client Near Cache
-            Thread populateClientNearCache = new Thread(() -> {
+            Thread populateClientNearCache = Thread.ofVirtual().unstarted(() -> {
                 int key = 0;
                 while (!stopTest.get()) {
                     clientCache.get(key++);
@@ -151,7 +151,7 @@ public class ClientCacheInvalidationMemberAddRemoveTest extends ClientNearCacheT
         }
 
         // updates data from member
-        Thread putFromMember = new Thread(() -> {
+        Thread putFromMember = Thread.ofVirtual().unstarted(() -> {
             while (!stopTest.get()) {
                 int key = getInt(KEY_COUNT);
                 int value = getInt(Integer.MAX_VALUE);
@@ -162,7 +162,7 @@ public class ClientCacheInvalidationMemberAddRemoveTest extends ClientNearCacheT
         });
         threads.add(putFromMember);
 
-        Thread clearFromMember = new Thread(() -> {
+        Thread clearFromMember = Thread.ofVirtual().unstarted(() -> {
             while (!stopTest.get()) {
                 memberCache.clear();
                 sleepSeconds(3);

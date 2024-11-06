@@ -751,7 +751,7 @@ public class ClientRegressionWithMockNetworkTest extends HazelcastTestSupport {
         CountDownLatch testFinishedLatch = new CountDownLatch(threadCount);
 
         for (int i = 0; i < threadCount; i++) {
-            Thread thread = new Thread(() -> {
+            Thread thread = Thread.ofVirtual().unstarted(() -> {
                 try {
                     for (int i1 = 0; i1 < mapSize; i1++) {
                         if (i1 == mapSize / 4) {

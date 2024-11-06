@@ -57,7 +57,7 @@ public class NodeQueryCacheEventServiceTest extends HazelcastTestSupport {
         final AtomicBoolean stop = new AtomicBoolean(false);
         ArrayList<Thread> threads = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            Thread thread = new Thread(() -> {
+            Thread thread = Thread.ofVirtual().unstarted(() -> {
                 while (!stop.get()) {
                     nodeQueryCacheEventService.addListener(mapName, "a", (EntryAddedListener<Object, Object>) event -> {
 

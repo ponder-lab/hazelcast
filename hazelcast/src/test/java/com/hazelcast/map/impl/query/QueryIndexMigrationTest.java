@@ -184,7 +184,7 @@ public class QueryIndexMigrationTest extends HazelcastTestSupport {
         int nodeCount = 6;
         final int runCount = 500;
         final Config config = newConfigWithIndex("testMap", "name");
-        executor = Executors.newFixedThreadPool(nodeCount);
+        executor = Executors.newVirtualThreadPerTaskExecutor();
         List<Future<?>> futures = new ArrayList<>();
 
         for (int i = 0; i < nodeCount; i++) {
@@ -223,12 +223,12 @@ public class QueryIndexMigrationTest extends HazelcastTestSupport {
         final Config config = newConfigWithIndex(name, "name");
 
         for (int i = 0; i < nodeCount; i++) {
-            new Thread(() -> {
+            Thread.ofVirtual().start(() -> {
                 HazelcastInstance hz = nodeFactory.newHazelcastInstance(config);
                 IMap<Object, Object> map = hz.getMap(name);
                 fillMap(map, findMe, entryPerNode, modulo);
                 latch.countDown();
-            }).start();
+            });
         }
 
         assertTrue(latch.await(1, MINUTES));

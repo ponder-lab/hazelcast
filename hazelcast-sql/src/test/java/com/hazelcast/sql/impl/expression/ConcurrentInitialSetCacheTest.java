@@ -64,7 +64,7 @@ public class ConcurrentInitialSetCacheTest {
         };
 
         List<Thread> threadList = IntStream.range(0, threadCount)
-                .mapToObj(value -> new Thread(runnable))
+                .mapToObj(value -> Thread.ofVirtual().unstarted(runnable))
                 .collect(Collectors.toList());
         threadList.forEach(Thread::start);
         threadList.forEach((ConsumerEx<Thread>) Thread::join);

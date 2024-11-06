@@ -70,20 +70,13 @@ public class SecondsBasedEntryTaskSchedulerStressTest {
                 = new SecondsBasedEntryTaskScheduler<>(executorService, processor, ScheduleType.FOR_EACH);
 
         for (int i = 0; i < NUMBER_OF_THREADS; i++) {
-            final Thread thread = new Thread() {
-                final Random random = new Random();
-
-                @Override
-                public void run() {
-                    for (int j = 0; j < NUMBER_OF_EVENTS_PER_THREAD; j++) {
-                        scheduler.schedule(getDelayMillis(), j, null);
-                    }
+            // Refactorable since run() is the only overridden method
+            final Thread thread = Thread.ofVirtual().unstarted(() -> {
+                Random random = new Random();
+                for (int j = 0; j < NUMBER_OF_EVENTS_PER_THREAD; j++) {
+                    scheduler.schedule(random.nextInt(5000) + 1, j, null);
                 }
-
-                private int getDelayMillis() {
-                    return random.nextInt(5000) + 1;
-                }
-            };
+            });
             thread.start();
         }
 
@@ -107,26 +100,19 @@ public class SecondsBasedEntryTaskSchedulerStressTest {
         final Map<Integer, Integer> latestValues = new ConcurrentHashMap<>();
 
         for (int i = 0; i < NUMBER_OF_THREADS; i++) {
-            final Thread thread = new Thread() {
-                final Random random = new Random();
+            // Refactorable by copying return value of only non-run() overridden method into body of Runnable
+            final Thread thread = Thread.ofVirtual().unstarted(() -> {
+                Random random = new Random();
+                for (int j = 0; j < NUMBER_OF_EVENTS_PER_THREAD; j++) {
+                    int key = random.nextInt(numberOfKeys);
 
-                @Override
-                public void run() {
-                    for (int j = 0; j < NUMBER_OF_EVENTS_PER_THREAD; j++) {
-                        int key = random.nextInt(numberOfKeys);
-
-                        synchronized (locks[key]) {
-                            if (scheduler.schedule(getDelayMillis(), key, j)) {
-                                latestValues.put(key, j);
-                            }
+                    synchronized (locks[key]) {
+                        if (scheduler.schedule(random.nextInt(5000) + 1, key, j)) {
+                            latestValues.put(key, j);
                         }
                     }
                 }
-
-                private int getDelayMillis() {
-                    return random.nextInt(5000) + 1;
-                }
-            };
+            });
             thread.start();
         }
 

@@ -208,7 +208,7 @@ public class ClientXATest {
         // this is needed due to a racy bug in atomikos
         txn(client);
         int size = 100;
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
         final CountDownLatch latch = new CountDownLatch(size);
         for (int i = 0; i < size; i++) {
             executorService.execute(() -> {

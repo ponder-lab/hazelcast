@@ -42,7 +42,7 @@ public class DelegateAndSkipOnConcurrentExecutionDecoratorTest
 
     @Test
     public void givenTheTaskIsNotRunning_whenThreadAttemptToExecuteIt_theTaskWillBeExecuted() throws InterruptedException {
-        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newCachedThreadPool();
+        ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newVirtualThreadPerTaskExecutor();
         ResumableCountingRunnable task = new ResumableCountingRunnable();
         decorateAndInvokeRunOnDifferentThread(task, executor);
 

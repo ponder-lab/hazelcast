@@ -300,7 +300,7 @@ public class TransactionsWithWriteBehind_whenNoCoalescingQueueIsFullTest extends
 
         AtomicBoolean stop = new AtomicBoolean(false);
         int availableProcessors = Math.min(6, RuntimeAvailableProcessors.get());
-        ExecutorService executorService = Executors.newFixedThreadPool(availableProcessors);
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
         for (int i = 0; i < availableProcessors - 1; i++) {
             executorService.submit(() -> {

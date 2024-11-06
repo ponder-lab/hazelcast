@@ -56,7 +56,7 @@ import static org.junit.Assert.assertTrue;
 @Category({QuickTest.class, ParallelJVMTest.class})
 public class FutureUtilTest extends HazelcastTestSupport {
 
-    private ExecutorService executorService = Executors.newFixedThreadPool(2);
+    private ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
 
     @After
     public void tearDown() throws Exception {
