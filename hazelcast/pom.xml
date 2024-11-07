@@ -357,9 +357,9 @@
                                 <argument>-tu</argument>
                                 <argument>ms</argument>
                                 <argument>-rff</argument>
-                                <argument>jmh-results.csv</argument>
+                                <argument>jmh-results_legacy.csv</argument>
                                 <argument>-o</argument>
-                                <argument>jmh-results.txt</argument>
+                                <argument>jmh-results_legacy.txt</argument>
                             </arguments>
                         </configuration>
                     </execution>
