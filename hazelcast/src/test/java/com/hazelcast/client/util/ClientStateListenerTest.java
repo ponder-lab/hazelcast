@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import static com.hazelcast.client.config.ClientConnectionStrategyConfig.ReconnectMode.ASYNC;
 import static com.hazelcast.client.config.ClientConnectionStrategyConfig.ReconnectMode.OFF;
@@ -48,12 +49,36 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Param;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.TearDown;
+import org.openjdk.jmh.annotations.Warmup;
+
 @RunWith(HazelcastParallelClassRunner.class)
 @Category({QuickTest.class, ParallelJVMTest.class})
+@State(Scope.Benchmark)
+@Warmup(iterations = 5)
+@BenchmarkMode({ Mode.AverageTime })
+@Fork(value = 1, jvmArgs = { "-Xms1G", "-Xmx1G", "-XX:+UseG1GC" })
+@Measurement(iterations = 5)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class ClientStateListenerTest extends ClientTestSupport {
+
+    @Param({"10", "50", "100", "500", "1000", "5000"})
+    int numThreads;
+
     private final TestHazelcastFactory hazelcastFactory = new TestHazelcastFactory();
 
     @After
+    @TearDown(Level.Invocation)
     public void cleanup() {
         hazelcastFactory.terminateAll();
     }
@@ -137,8 +162,8 @@ public class ClientStateListenerTest extends ClientTestSupport {
     }
 
     @Test(timeout = MINUTE * 10)
+    @Benchmark
     public void testClientReconnectModeAsyncConnectedMultipleThreads() {
-        int numThreads = 10;
         ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
         ClientConfig clientConfig = new ClientConfig();

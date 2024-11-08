@@ -48,9 +48,32 @@ import static com.hazelcast.test.HazelcastTestSupport.warmUpPartitions;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Param;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.TearDown;
+import org.openjdk.jmh.annotations.Warmup;
+
 @RunWith(HazelcastSerialClassRunner.class)
 @Category({QuickTest.class, ParallelJVMTest.class})
+@State(Scope.Benchmark)
+@Warmup(iterations = 5)
+@BenchmarkMode({ Mode.AverageTime })
+@Fork(value = 1, jvmArgs = { "-Xms1G", "-Xmx1G", "-XX:+UseG1GC" })
+@Measurement(iterations = 5)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class ClientClusterStateTest {
+
+    @Param({"10", "50", "100", "500", "1000", "5000"})
+    int numThreads;
 
     private TestHazelcastFactory factory;
 
@@ -59,6 +82,7 @@ public class ClientClusterStateTest {
     private HazelcastInstance instance;
 
     @Before
+    @Setup(Level.Invocation)
     public void before() {
         factory = new TestHazelcastFactory();
         instances = factory.newInstances(new Config(), 4);
@@ -69,6 +93,7 @@ public class ClientClusterStateTest {
     }
 
     @After
+    @TearDown(Level.Invocation)
     public void after() {
         factory.terminateAll();
     }
@@ -144,6 +169,7 @@ public class ClientClusterStateTest {
     }
 
     @Test
+    @Benchmark
     public void testClusterShutdownDuringMapPutAll() {
         warmUpPartitions(instances);
         waitAllForSafeState(instances);
@@ -160,7 +186,6 @@ public class ClientClusterStateTest {
             values.put(value, value);
         }
 
-        final int numThreads = 10;
         final CountDownLatch threadsFinished = new CountDownLatch(numThreads);
         final CountDownLatch threadsStarted = new CountDownLatch(numThreads);
 
