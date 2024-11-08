@@ -64,15 +64,40 @@ import static com.hazelcast.test.Accessors.getNode;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Param;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.TearDown;
+import org.openjdk.jmh.annotations.Warmup;
+
 @RunWith(HazelcastSerialClassRunner.class)
 @Category(NightlyTest.class)
+@State(Scope.Benchmark)
+@Warmup(iterations = 5)
+@BenchmarkMode({ Mode.AverageTime })
+@Fork(value = 1, jvmArgs = { "-Xms1G", "-Xmx1G", "-XX:+UseG1GC" })
+@Measurement(iterations = 5)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class JoinStressTest extends HazelcastTestSupport {
+
+    @Param({"10", "50", "100", "500", "1000", "5000"})
+    int count;
 
     private static final long TEN_MINUTES_IN_MILLIS = 10 * 60 * 1000L;
     private ILogger logger = Logger.getLogger(JoinStressTest.class);
 
     @Before
     @After
+    @Setup(Level.Invocation)
+    @TearDown(Level.Invocation)
     public void tearDown() throws Exception {
         HazelcastInstanceFactory.terminateAll();
     }
@@ -89,7 +114,6 @@ public class JoinStressTest extends HazelcastTestSupport {
 
     @Test(timeout = TEN_MINUTES_IN_MILLIS)
     public void testJoinCompletesCorrectlyWhenMultipleNodesStartedParallel() {
-        int count = 10;
         final TestHazelcastInstanceFactory factory = new TestHazelcastInstanceFactory(count);
         final HazelcastInstance[] instances = new HazelcastInstance[count];
         final CountDownLatch latch = new CountDownLatch(count);
@@ -244,6 +268,7 @@ public class JoinStressTest extends HazelcastTestSupport {
     }
 
     @Test(timeout = 300000)
+    @Benchmark
     public void testJoinWhenMemberClosedInBetween() throws InterruptedException {
         //Test is expecting to all can join safely.
         // On the failed case the last opened instance throws java.lang.IllegalStateException: Node failed to start!
@@ -254,11 +279,10 @@ public class JoinStressTest extends HazelcastTestSupport {
         HazelcastInstance i4 = Hazelcast.newHazelcastInstance(config);
 
         final IMap<Integer, Integer> map = i4.getMap("a");
-        int numThreads = 40;
         final int loop = 5000;
 
-        Thread[] threads = new Thread[numThreads];
-        for (int i = 0; i < numThreads; i++) {
+        Thread[] threads = new Thread[count];
+        for (int i = 0; i < count; i++) {
             threads[i] = new Thread(() -> {
                 Random random = new Random();
                 for (int j = 0; j < loop; j++) {
@@ -285,7 +309,7 @@ public class JoinStressTest extends HazelcastTestSupport {
         //Should not throw java.lang.IllegalStateException: Node failed to start!
         Hazelcast.newHazelcastInstance(config);
 
-        for (int i = 0; i < numThreads; i++) {
+        for (int i = 0; i < count; i++) {
             threads[i].join();
         }
     }
